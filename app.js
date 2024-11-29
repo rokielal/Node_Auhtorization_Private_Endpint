@@ -1,15 +1,18 @@
 const express = require("express");
 const bycript = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const auth = require("./auth");
+const cors = require("cors");
+
 const app = express();
 
 const dbConnect = require("./db/dbConnect");
 const User = require("./db/userModel");
 
-console.log("User", User);
+// console.log("User", User);
 dbConnect();
+
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({
@@ -116,25 +119,6 @@ app.post("/login", (req, res) => {
     });
 });
 
-// public end point
-app.get("/public-endpoint", (req, res) => {
-  res.json({
-    message: "You are free to access this anytime",
-  });
-});
 
-// private end-point
-// auth here is middleware
-app.get("/private-endpoint", auth, (req, res) => {
-  res.json({
-    message: "You need authentication to access it",
-  });
-});
 
-// private end-point to show order page once the user is loggin
-app.get("/orders", auth, (req, res) => {
-  res.json({
-    message: "Your Orders are ready to access",
-  });
-});
 module.exports = app;
